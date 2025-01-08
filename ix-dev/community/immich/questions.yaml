@@ -128,6 +128,24 @@ questions:
             required: true
             $ref:
               - definitions/port
+        - variable: db_port
+          label: Database Port
+          description: The port for Postgres Database
+          schema:
+            type: int
+            default: 5432
+            required: true
+            $ref:
+              - definitions/port
+        - variable: redis_port
+          label: Redis Port
+          description: The port for Redis
+          schema:
+            type: int
+            default: 6379
+            required: true
+            $ref:
+              - definitions/port
 
   - variable: storage
     label: ""

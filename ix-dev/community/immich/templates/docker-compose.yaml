@@ -9,12 +9,14 @@
   "volume": values.storage.postgres_data,
 } %}
 {% set postgres = tpl.deps.postgres(values.consts.pgvecto_container_name, "pgvecto_image", pg_config, perm_container) %}
+{% do postgres.container.ports.add_port(values.network.db_port, values.network.db_port) %}
 
 {% set redis_config = {
   "password": values.immich.redis_password,
   "volume": {"type": "temporary", "volume_config": {"volume_name": "redis-data"}},
 } %}
 {% set redis = tpl.deps.redis(values.consts.redis_container_name, "redis_image", redis_config, perm_container) %}
+{% do redis.container.ports.add_port(values.network.redis_port, values.network.redis_port) %}
 
 {% set ml_container = namespace(x=None) %}
 
@@ -43,11 +45,12 @@
 {% do server_container.environment.add_env("DB_PASSWORD", values.immich.db_password) %}
 {% do server_container.environment.add_env("DB_HOSTNAME", values.consts.pgvecto_container_name) %}
 {% do server_container.environment.add_env("DB_DATABASE_NAME", values.consts.db_name) %}
-{% do server_container.environment.add_env("DB_PORT", "5432") %}
+{% do server_container.environment.add_env("DB_PORT", values.network.db_port) %}
 {% do server_container.environment.add_env("REDIS_HOSTNAME", values.consts.redis_container_name) %}
 {% do server_container.environment.add_env("REDIS_PASSWORD", values.immich.redis_password) %}
-{% do server_container.environment.add_env("REDIS_PORT", "6379") %}
+{% do server_container.environment.add_env("REDIS_PORT", values.network.redis_port) %}
 {% do server_container.environment.add_env("REDIS_DBINDEX", "0") %}
+{% do server_container.environment.add_env("IMMICH_WORKERS_INCLUDE", "api") %}
 {% do server_container.environment.add_user_envs(values.immich.additional_envs) %}
 
 {% if values.immich.enable_ml %}

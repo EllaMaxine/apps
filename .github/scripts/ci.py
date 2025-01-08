@@ -355,7 +355,7 @@ def print_inspect_data(container):
 
 
 def run_app():
-    cmd = f"{get_base_cmd()} up --detach --quiet-pull --wait --wait-timeout 600"
+    cmd = f"{get_base_cmd()} up --detach --quiet-pull --force-recreate --wait --wait-timeout 600"
     print_cmd(cmd)
     res = subprocess.run(cmd, shell=True, capture_output=True)
 

@@ -14,6 +14,8 @@ immich:
 
 network:
   web_port: 8080
+  db_port: 5432
+  redis_port: 6379
 
 ix_volumes:
   postgres-data: /opt/tests/mnt/postgres-data
